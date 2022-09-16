@@ -1,0 +1,48 @@
+buildscript {
+    ext.kotlin_version = "1.5.30"
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:7.0.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.18.0"
+}
+
+allprojects {
+    apply plugin: "io.gitlab.arturbosch.detekt"
+
+    detekt {
+        toolVersion = "1.18.0"
+        config = files("$rootDir/config/detekt/detekt.yml")
+        buildUponDefaultConfig = true
+        parallel = true
+        reports {
+            html {
+                enabled = true
+                destination = file("$rootDir/build/detekt/detekt.html")
+            }
+            txt {
+                enabled = false
+            }
+            sarif {
+                enabled = false
+            }
+            xml {
+                enabled = false
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
